@@ -15,35 +15,31 @@ Feature: DELETE statement
       end
     """
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: simple delete should generate correct statement
     When I call: delete
     Then it should generate CQL: DELETE FROM <model_class>
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete one column should generate correct statement
     When I call: delete(:user_id)
     Then it should generate CQL: DELETE user_id FROM <model_class>
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete two columns should generate correct statement
     When I call: delete(:user_id, 'text')
     Then it should generate CQL: DELETE user_id, text FROM <model_class>
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete columns and list of Integers should generate correct statement
     When I call: delete(:user_id, 'text', :tweet_id => [1,2,3])
     Then it should generate CQL: DELETE user_id, text, tweet_id[1, 2, 3] FROM <model_class>
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete columns and list of Strings should generate correct statement
     When I call: delete(:user_id, 'text', :tweet_id => ['1','2','3'])
     Then it should generate CQL: DELETE user_id, text, tweet_id['1', '2', '3'] FROM <model_class>
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete with timestamp should generate correct statement
     When I call: delete(:user_id).timestamp(1366057256324)
     Then it should generate CQL: DELETE user_id FROM <model_class> USING TIMESTAMP 1366057256324 
 
-  Scenario: simple update with partial primary key constraint
+  Scenario: delete with TIMESTAMP and WHERE should generate correct statement
     When I call: delete(:user_id).timestamp(1366057256324).where{user_id == 11}
-    Then it should generate CQL: DELETE user_id FROM <model_class> USING TIMESTAMP 1366057256324 WHERE user_id = 11
-
-  Scenario: simple update with partial primary key constraint
-    When I call: delete(:user_id).timestamp(1366057256324).where{user_id == 11}.consistency('ONE')
     Then it should generate CQL: DELETE user_id FROM <model_class> USING TIMESTAMP 1366057256324 WHERE user_id = 11
 

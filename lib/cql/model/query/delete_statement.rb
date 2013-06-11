@@ -17,7 +17,7 @@ module Cql::Model::Query
     def initialize(klass, client=nil)
       super(klass, client)
       @where = []
-      @columns = []
+      @columns = nil
     end
 
     # Create or append to the WHERE clause for this statement. The block that you pass will define the constraint
