@@ -166,6 +166,18 @@ module Cql::Model::ClassMethods
     Cql::Model::Query::UpdateStatement.new(self).update(values)
   end
 
+  # Begin building a CQL DELETE statement.
+  #
+  # @param [Object] *params list of yield parameters for the block
+  #
+  # @example tell us how old Joe is
+  #   Person.delete.where { name == 'Joe' }.each { |person| puts person.age }
+  #   Person.delete(:age, :height).where { name == 'Joe' }.each { |person| puts person.age }
+  #   Person.delete(:age, :height => ['150', '155']).where { name == 'Joe' }.each { |person| puts person.age }
+  def delete(*params)
+    Cql::Model::Query::DeleteStatement.new(self).delete(*params)
+  end
+
   # @TODO docs
   def each_row(&block)
     Cql::Model::Query::SelectStatement.new(self).each_row(&block)
