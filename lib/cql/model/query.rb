@@ -84,9 +84,7 @@ module Cql::Model::Query
         else
           # Single map -- CQL list (for UPDATE) or set (for WHERE...IN) literal
           case context
-          when :update
-            '[' + value.map { |v| cql_value(v) }.join(', ') + ']'
-          when :insert
+          when :update, :insert
             '[' + value.map { |v| cql_value(v) }.join(', ') + ']'
           else
             '(' + value.map { |v| cql_value(v) }.join(', ') + ')'
