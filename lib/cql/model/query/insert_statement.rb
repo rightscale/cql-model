@@ -37,7 +37,7 @@ module Cql::Model::Query
         raise Cql::Model::MissingKey.new("Missing primary key(s) in INSERT statement: #{keys.select { |k| k[1].nil? }.map(&:first).map(&:inspect).join(', ')}")
       end
       s = "INSERT INTO #{@klass.table_name} (#{keys.map { |k| k[0] }.join(', ')}, #{@values.keys.join(', ')})"
-      s << " VALUES (#{keys.map { |k| ::Cql::Model::Query.cql_value(k[1]) }.join(', ')}, #{@values.values.map { |v| ::Cql::Model::Query.cql_value(v) }.join(', ')})"
+      s << " VALUES (#{keys.map { |k| ::Cql::Model::Query.cql_value(k[1], :insert) }.join(', ')}, #{@values.values.map { |v| ::Cql::Model::Query.cql_value(v, :insert) }.join(', ')})"
       options = []
       options << "TIMESTAMP #{@timestamp}" unless @timestamp.nil?
       options << "TTL #{@ttl}" unless @ttl.nil?
