@@ -86,6 +86,8 @@ module Cql::Model::Query
           case context
           when :update
             '[' + value.map { |v| cql_value(v) }.join(', ') + ']'
+          when :insert
+            '[' + value.map { |v| cql_value(v) }.join(', ') + ']'
           else
             '(' + value.map { |v| cql_value(v) }.join(', ') + ')'
           end

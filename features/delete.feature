@@ -31,10 +31,6 @@ Feature: DELETE statement
     When I call: delete(:user_id, 'text', :tweet_id => [1,2,3])
     Then it should generate CQL: DELETE user_id, text, tweet_id[1, 2, 3] FROM <model_class>
 
-  Scenario: delete columns and list of Strings should generate correct statement
-    When I call: delete(:user_id, 'text', :tweet_id => ['1','2','3'])
-    Then it should generate CQL: DELETE user_id, text, tweet_id['1', '2', '3'] FROM <model_class>
-
   Scenario: delete with timestamp should generate correct statement
     When I call: delete(:user_id).timestamp(1366057256324)
     Then it should generate CQL: DELETE user_id FROM <model_class> USING TIMESTAMP 1366057256324 
