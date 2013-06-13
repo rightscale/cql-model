@@ -28,6 +28,8 @@ module Cql::Model
     klass.__send__(:include, Cql::Model::InstanceMethods)
   end
 
+  @@cql_master_mutex = Mutex.new
+
   # Get or set the "master" client connection shared by every model that doesn't bother to
   # set its own. Defaults to a localhost connection with no default keyspace; every query
   # must be wrapped in a "using_keyspace" method call.
@@ -36,7 +38,7 @@ module Cql::Model
   # @return [Cql::Client] the current client
   def self.cql_client(new_client=nil)
     if new_client
-      @@cql_model_mutex.synchronize do
+      @@cql_master_mutex.synchronize do
         @@cql_client = new_client
       end
     else
