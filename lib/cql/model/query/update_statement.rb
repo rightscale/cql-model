@@ -63,7 +63,7 @@ module Cql::Model::Query
             if v.respond_to?(:call)
               "#{n} = #{UpdateExpression.new(&v).to_s}"
             else
-              "#{n} = #{::Cql::Model::Query.cql_value(v)}"
+              "#{n} = #{::Cql::Model::Query.cql_value(v, :update)}"
             end
           end
           s << " SET #{pairs.join(', ')}"
