@@ -32,12 +32,13 @@ module Cql::Model::Query
     #
     # @return [String] a CQL INSERT statement with suitable constraints and options
     def to_s
-      keys = @klass.primary_key.inject([]) { |h, k| h << [k, @values.delete(k)]; h }
+      values = @values.dup
+      keys = @klass.primary_key.inject([]) { |h, k| h << [k, values.delete(k)]; h }
       if keys.any? { |k| k[1].nil? }
         raise Cql::Model::MissingKey.new("Missing primary key(s) in INSERT statement: #{keys.select { |k| k[1].nil? }.map(&:first).map(&:inspect).join(', ')}")
       end
-      s = "INSERT INTO #{@klass.table_name} (#{keys.map { |k| k[0] }.join(', ')}, #{@values.keys.join(', ')})"
-      s << " VALUES (#{keys.map { |k| ::Cql::Model::Query.cql_value(k[1], :insert) }.join(', ')}, #{@values.values.map { |v| ::Cql::Model::Query.cql_value(v, :insert) }.join(', ')})"
+      s = "INSERT INTO #{@klass.table_name} (#{keys.map { |k| k[0] }.join(', ')}, #{values.keys.join(', ')})"
+      s << " VALUES (#{keys.map { |k| ::Cql::Model::Query.cql_value(k[1], :insert) }.join(', ')}, #{values.values.map { |v| ::Cql::Model::Query.cql_value(v, :insert) }.join(', ')})"
       options = []
       options << "TIMESTAMP #{@timestamp}" unless @timestamp.nil?
       options << "TTL #{@ttl}" unless @ttl.nil?
