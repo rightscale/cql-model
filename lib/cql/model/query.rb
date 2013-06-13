@@ -67,8 +67,12 @@ module Cql::Model::Query
   # @see #cql_identifier
   # @see http://www.datastax.com/docs/1.1/references/cql/cql_lexicon#keywords-and-identifiers
   def cql_value(value, context=nil)
-    # TODO UUID, Time, ...
     case value
+    when Cql::Uuid
+      value
+    when Time
+      utc = value.utc
+      "#{SQ}#{"%4.4d-%2.2d-%2.2dT%2.2d:%2.2d:%2.2d+0000" % [utc.year, utc.mon, utc.day, utc.hour, utc.min, utc.sec]}#{SQ}"
     when String
       "#{SQ}#{value.gsub(SQ, SQSQ)}#{SQ}"
     when Numeric, TrueClass, FalseClass
