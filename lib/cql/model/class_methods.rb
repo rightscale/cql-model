@@ -197,6 +197,6 @@ module Cql::Model::ClassMethods
     current_keyspace = cql_client.keyspace
     cql_client.use(keyspace)
     block.call
-    cql_client.use(current_keyspace)
+    cql_client.use(current_keyspace) if current_keyspace && current_keyspace.size > 0
   end
 end
