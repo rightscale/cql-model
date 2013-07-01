@@ -81,3 +81,40 @@ Then /^it should backup current keyspace, use '(\w+)' and restore previous one$/
   @cql_model.cql_client.keyspace.should == 'old'
 end
 
+Then /^it should backup current keyspace, use '(\w+)' and do not restore previous one$/ do |keyspace|
+  class TestClient1
+    def initialize
+      @keyspace = nil
+    end
+    def keyspace
+      @keyspace
+    end
+    def use(keyspace)
+      @keyspace = keyspace
+    end
+  end
+  @cql_model.cql_client(TestClient1.new)
+  @cql_model.should_receive(:insert) do
+    @cql_model.cql_client.keyspace.should == keyspace
+  end
+  eval(@ruby_code)
+  @cql_model.cql_client.keyspace.should == keyspace
+  class TestClient2
+    def initialize
+      @keyspace = ''
+    end
+    def keyspace
+      @keyspace
+    end
+    def use(keyspace)
+      @keyspace = keyspace
+    end
+  end
+  @cql_model.cql_client(TestClient2.new)
+  @cql_model.should_receive(:insert) do
+    @cql_model.cql_client.keyspace.should == keyspace
+  end
+  eval(@ruby_code)
+  @cql_model.cql_client.keyspace.should == keyspace
+end
+
