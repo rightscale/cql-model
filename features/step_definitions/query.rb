@@ -61,6 +61,10 @@ When /^try: (.*)/ do |ruby|
   @ruby_code = ruby
 end
 
+When /^try:$/ do |ruby|
+  @ruby_code = ruby
+end
+
 Then /^it should backup current keyspace, use '(\w+)' and restore previous one$/ do |keyspace|
   class TestClient
     def initialize
