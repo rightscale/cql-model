@@ -29,6 +29,12 @@ module Cql::Model
   end
 
   @@cql_master_mutex = Mutex.new
+  @@default_config = {'server' => 'localhost'}
+
+  def self.default_config=(config)
+    @@default_config = config
+  end
+
 
   # Get or set the "master" client connection shared by every model that doesn't bother to
   # set its own. Defaults to a localhost connection with no default keyspace; every query
@@ -42,8 +48,8 @@ module Cql::Model
         @@cql_client = new_client
       end
     else
-      @@cql_client ||= Cql::Client.new
-      @@cql_client.connect unless @@cql_client.connected?
+      @@cql_client ||= Cql::Client.connect(@@default_config)
+      # @@cql_client.connect unless @@cql_client.connected?
     end
 
     @@cql_client
